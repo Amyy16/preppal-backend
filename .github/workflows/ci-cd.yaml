@@ -8,7 +8,7 @@ on:
     branches:
       - main
 jobs:
-  build-test-deploy:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,12 +22,3 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Trigger Render Deployment
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
-        run: |
-          curl -X POST "https://api.render.com/deploy/srv-${SERVICE_ID}" \
-          -H "Authorization: Bearer ${RENDER_API_KEY}" \
-          -H "Accept: application/json"
