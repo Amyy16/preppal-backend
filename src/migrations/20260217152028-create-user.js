@@ -15,9 +15,9 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      role: {
-        type: Sequelize.STRING
-      },
+      // role: {
+      //   type: Sequelize.STRING
+      // },
       isVerified: {
         type: Sequelize.BOOLEAN
       },
