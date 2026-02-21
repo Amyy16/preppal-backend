@@ -26,8 +26,11 @@ jobs:
       - name: Run Sequelize migrations
         run: npm run db:migrate
 
-      - name: Trigger Render deployment
-        uses: render-examples/deploy-action@v1
-        with:
-          apiKey: ${{ secrets.RENDER_API_KEY }}
-          serviceId: ${{ secrets.RENDER_SERVICE_ID }}
+      - name: Trigger Render Deployment
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+        run: |
+          curl -X POST "https://api.render.com/deploy/srv-${SERVICE_ID}" \
+          -H "Authorization: Bearer ${RENDER_API_KEY}" \
+          -H "Accept: application/json"
