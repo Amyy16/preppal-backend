@@ -1,16 +1,20 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const businessController = require("../controllers/business.controller");
-const authMiddleware = require("../middleware/auth.middleware"); // ✅ folder is singular
-const roleMiddleware = require("../middleware/role.middleware"); // ✅ folder is singular
+const BusinessController = require('../controllers/Business/business.controller');
+const authMiddleware = require('../middleware/auth.middleware');
+const validateRequest = require('../middleware/validation');
+const { businessSchema, updateBusinessSchema } = require('../validation/userValidation');
 
-// Only users with role "owner" can create a business
-router.post(
-  "/",
-  authMiddleware,
-  roleMiddleware(["owner"]),
-  businessController.createBusiness
-);
+
+// Protect all routes
+router.use(authMiddleware);
+
+router.post('/create', validateRequest(businessSchema), BusinessController.addBusiness);           
+router.get('/businesses', BusinessController.getBusinesses);          // Get all user's businesses
+router.get('/:id', BusinessController.getBusinessById);     // Get single business by ID
+router.put('/update/:id', validateRequest(updateBusinessSchema), BusinessController.updateBusiness);      // Update business
+router.delete('/:id', BusinessController.deleteBusiness);   // Delete business
 
 module.exports = router;
+
