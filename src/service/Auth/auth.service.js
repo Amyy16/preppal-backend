@@ -27,13 +27,13 @@ const AuthService = {
         // await sendVerificationEmail(email, token);
         await sendVerifymail(email, token);
       } catch (error) {
-        throw new Error('Error sending verification Email: ' + error.message);
+        throw new Error('Error sending verification Email: ' + error);
       };
 
       const { passwordHash: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
     } catch (error) {
-      throw new Error('Error signing up: ' + error.message);
+      throw new Error('Error signing up: ' + error);
     }
   },
 
