@@ -3,6 +3,7 @@ const VerificationTokenService = require('../Auth/verification.service');
 const { generateAccessToken } = require('../../utils/verificationToken');
 const Password = require('../../utils/passwordhash') 
 const {sendVerificationEmail, sendPasswordResetEmail} = require('./email.service');
+const { sendEmail } = require('./mail.service');
 const crypto = require('crypto');
 const VerificationTokenRepository = require('../../db/verificationToken.db');
 
@@ -23,11 +24,16 @@ const AuthService = {
       // create email verification token
       const { token } = await VerificationTokenService.createTokenForUser(user.id)
       try {
-        await sendVerificationEmail(email, token);
+        // await sendVerificationEmail(email, token);
+        await sendEmail({
+          to: email, 
+          subject: "Verify Your Email",
+          html: verifyEmailTemplate(token),
+        });
       } catch (error) {
         throw new Error('Error sending verification Email: ' + error.message);
       };
-      
+
       const { passwordHash: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
     } catch (error) {
