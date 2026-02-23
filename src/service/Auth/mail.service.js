@@ -13,6 +13,7 @@ const sendEmail = async ({ to, subject, html }) => {
     });
 
     console.log("RESEND RESPONSE:", response); // 👈 ADD THIS
+     return response;
   } catch (error) {
     console.error("Email error:", error);
     throw new Error("Email failed to send");
