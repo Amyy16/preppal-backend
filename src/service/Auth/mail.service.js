@@ -16,4 +16,9 @@ const sendEmail = async ({ to, subject, html }) => {
   }
 };
 
-module.exports = sendEmail;
+async function sendVerifymail(to, token) {
+  const html = verifyEmailTemplate(token);
+  return sendEmail(to, 'Verify Your Email', html);
+};
+
+module.exports = sendVerifymail;
