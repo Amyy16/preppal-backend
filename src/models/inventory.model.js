@@ -31,6 +31,11 @@ const Inventory = sequelize.define("Inventory", {
     type: DataTypes.DATE,
   }
 
+ shelf: {
+    type: DataTypes.STRING,
+  allowNull: true
+  },
+
 }, {
   timestamps: true,
   tableName: 'inventory'
