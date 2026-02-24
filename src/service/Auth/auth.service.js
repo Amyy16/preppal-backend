@@ -5,6 +5,7 @@ const Password = require('../../utils/passwordhash')
 const {sendVerificationEmail, sendPasswordResetEmail} = require('./email.service');
 const crypto = require('crypto');
 const VerificationTokenRepository = require('../../db/verificationToken.db');
+const sendVerifymail = require('./mail.service');
 
 const AuthService = {
   // Signup user
@@ -23,15 +24,16 @@ const AuthService = {
       // create email verification token
       const { token } = await VerificationTokenService.createTokenForUser(user.id)
       try {
-        await sendVerificationEmail(email, token);
+        // await sendVerificationEmail(email, token);
+        await sendVerifymail(user.email, token );
       } catch (error) {
-        throw new Error('Error sending verification Email: ' + error.message);
+        throw new Error('Error sending verification Email: ' + error);
       };
-      
+
       const { passwordHash: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
     } catch (error) {
-      throw new Error('Error signing up: ' + error.message);
+      throw new Error('Error signing up: ' + error);
     }
   },
 
@@ -92,7 +94,9 @@ async resendVerification(email) {
 
     // Send the email
     try {
-      await sendVerificationEmail(email, token);
+      // await sendVerificationEmail(email, token);
+      await sendVerifymail(user.email, token );
+
     } catch (error) {
       throw new Error('Error sending verification Email: ' + error.message);
     }
