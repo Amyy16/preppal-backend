@@ -94,7 +94,9 @@ async resendVerification(email) {
 
     // Send the email
     try {
-      await sendVerificationEmail(email, token);
+      // await sendVerificationEmail(email, token);
+      await sendVerifymail(user.email, token );
+
     } catch (error) {
       throw new Error('Error sending verification Email: ' + error.message);
     }
