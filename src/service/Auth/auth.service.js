@@ -25,7 +25,7 @@ const AuthService = {
       const { token } = await VerificationTokenService.createTokenForUser(user.id)
       try {
         // await sendVerificationEmail(email, token);
-        await sendVerifymail(email, token);
+        await sendVerifymail(user.email, token );
       } catch (error) {
         throw new Error('Error sending verification Email: ' + error);
       };
