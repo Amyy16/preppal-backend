@@ -40,11 +40,11 @@ async function sendVerifymail(to, token) {
   return sendEmail(to, 'Verify Your Email', html);
 };
 
-// module.exports = sendVerifymail;
+module.exports = sendVerifymail;
 
-module.exports = {
-  sendVerifymail,
-  emailTemplates: {
-    EMAIL_VERIFICATION: verifyEmailTemplate,
-  },
-};
+// module.exports = {
+//   sendVerifymail,
+//   emailTemplates: {
+//     EMAIL_VERIFICATION: verifyEmailTemplate,
+//   },
+// };
