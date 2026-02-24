@@ -38,6 +38,8 @@ const ForecastService = {
           is_holiday: 0,
         };
 
+        console.log(payload)
+
         const prediction = await mlApiService.getPrediction(payload);
 
         // if (!prediction) continue;
@@ -57,7 +59,8 @@ const ForecastService = {
 
             const previousForecasts =
               await DailyForecastRepository.getForecastsByDate(
-                yesterday.toISOString().split("T")[0], businessId
+                yesterday.toISOString().split("T")[0],
+                businessId,
               );
 
             const prev = previousForecasts.find((f) => f.itemId === item.id);
@@ -89,7 +92,7 @@ const ForecastService = {
           const saved = await DailyForecastRepository.createForecast({
             itemId: item.id,
             businessId: businessId,
-            forecastDate: dateStr,
+            forecastDate: tomorrow,
             predictedDemand: prediction.predicted_demand,
             recommendedQuantity: prediction.recommended_quantity || 0,
             confidence: prediction.confidence,
@@ -116,7 +119,8 @@ const ForecastService = {
         yesterday.setDate(yesterday.getDate() - 1);
         const previousForecasts =
           await DailyForecastRepository.getForecastsByDate(
-            yesterday.toISOString().split("T")[0], businessId
+            yesterday.toISOString().split("T")[0],
+            businessId,
           );
         const prev = previousForecasts.find((f) => f.itemId === item.id);
 
@@ -190,32 +194,37 @@ const ForecastService = {
   },
 
   async checkRisk(businessId, itemId, plannedQuantity) {
-    const forecast = await DailyForecast.findOne({
-      where: {
-        business_id: businessId,
-        item_id: itemId,
-      },
-    });
-
+    console.log("Checking risk for:", { businessId, itemId, plannedQuantity });
+    // get today's forecast for this item
+    const today = new Date();
+    console.log(today);
+    const forecast = await DailyForecastRepository.getForecastByItemAndDate(
+      today,
+      businessId,
+      itemId,
+    );
     if (!forecast) {
-      throw new Error("Forecast not found for this business");
+      return ({
+                success: false,
+        message: "No forecast available for this item today, cannot assess risk",
+      });
     }
-
     const riskData = await mlApiService.checkRisk({
-      predicted_demand: forecast.predicted_demand,
+      predicted_demand: forecast.predictedDemand,
       planned_quantity: plannedQuantity,
     });
 
     const saved = await ProductionPlan.create({
-      business_id: businessId,
-      item_id: itemId,
-      predicted_demand: forecast.predicted_demand,
-      planned_quantity: plannedQuantity,
-      risk_level: riskData?.risk_level,
-      waste_percentage: riskData?.waste_percentage,
+      businessId: businessId,
+      itemId: itemId,
+      predictedDemand: forecast.predictedDemand,
+      planDate: today,
+      plannedQuantity: plannedQuantity,
+      riskLevel: riskData?.risk_level,
+      wastePercentage: riskData?.waste_percentage,
     });
 
-    return saved;
+    return riskData;
   },
 };
 

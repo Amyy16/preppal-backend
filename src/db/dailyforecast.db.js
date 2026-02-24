@@ -51,7 +51,21 @@ const DailyForecastRepository = {
       throw new Error('Error fetching forecasts by date: ' + error.message);
     }
   },
-
+  async getForecastByItemAndDate(date, businessId, itemId) {
+    try {
+        console.log({ date, businessId, itemId });
+      const forecast = await DailyForecast.findOne({
+        where: {
+          forecastDate: date,
+          businessId: businessId,
+          itemId: itemId
+        }
+      });
+      return this.mapToEntity(forecast);
+    } catch (error) {
+      throw new Error('Error fetching forecast by item and date: ' + error.message);
+    }
+  },
   async updateForecast(id, data) {
     try {
       await DailyForecast.update(data, { where: { id } });

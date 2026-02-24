@@ -2,7 +2,7 @@ const axios = require("axios");
 require("dotenv").config();
 
 const BASE_URL = process.env.ML_API_BASE_URL;
-const TIMEOUT = 200;
+const TIMEOUT = 70000;
 
 const mlApiService = {
   async healthCheck() {
