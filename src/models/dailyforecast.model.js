@@ -1,60 +1,63 @@
-'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const DailyForecast = sequelize.define('DailyForecast', {
+const { sequelize } = require("../connection.js");
+const { DataTypes } = require("sequelize");
+
+const DailyForecast = sequelize.define(
+  "DailyForecast",
+  {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
 
     businessId: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
     },
 
     itemId: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
     },
 
     forecastDate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
+      type: DataTypes.DATE,
+      allowNull: false,
     },
 
     predictedDemand: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
 
     recommendedQuantity: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
 
     confidence: {
       type: DataTypes.STRING(10),
-      allowNull: false
+      allowNull: false,
     },
 
     confidenceScore: {
-      type: DataTypes.DECIMAL(3,2),
-      allowNull: false
-    }
+      type: DataTypes.DECIMAL(3, 2),
+      allowNull: false,
+    },
+  },
+  {
+    tableName: "daily_forecasts",
+  },
+);
 
-  }, {
-    tableName: 'daily_forecasts'
+DailyForecast.associate = function (models) {
+  DailyForecast.belongsTo(models.Business, {
+    foreignKey: "businessId",
   });
 
-  DailyForecast.associate = function(models) {
-    DailyForecast.belongsTo(models.Business, {
-      foreignKey: 'businessId'
-    });
-
-    DailyForecast.belongsTo(models.MenuItem, {
-      foreignKey: 'itemId'
-    });
-  };
-
-  return DailyForecast;
+  DailyForecast.belongsTo(models.Inventory, {
+    foreignKey: "itemId",
+  });
 };
+
+module.exports = DailyForecast;

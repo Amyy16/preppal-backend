@@ -24,14 +24,14 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'menu_items',
+          model: 'inventory',
           key: 'id'
         },
         onDelete: 'CASCADE'
       },
 
       forecastDate: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATE,
         allowNull: false
       },
 

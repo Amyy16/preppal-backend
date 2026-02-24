@@ -27,11 +27,11 @@ const Inventory = sequelize.define("Inventory", {
     allowNull: false,
   },
 
-  productionDate: {
-    type: DataTypes.DATE,
-  }
+productionDate: {
+  type: DataTypes.DATE,
+},
 
- shelf: {
+shelf: {
     type: DataTypes.STRING,
   allowNull: true
   },
