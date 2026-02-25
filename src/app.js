@@ -10,10 +10,14 @@ const authRoutes = require("./routes/auth.routes");
 const businessRoutes = require("./routes/business.routes");
 const inventoryRoutes = require("./routes/inventory.routes");
 const dailySalesRoutes = require("./routes/dailySales.routes");
+const forecastRoutes = require("./routes/forecast.route");
+const productionRoutes = require("./routes/production.routes");
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/business", businessRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
 app.use("/api/v1/daily-sales", dailySalesRoutes);
+app.use('/api/v1/forecasts', forecastRoutes);
+app.use("/api/v1/production", productionRoutes);
 
 module.exports = app;

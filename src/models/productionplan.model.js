@@ -1,5 +1,6 @@
-'use strict';
-module.exports = (sequelize, DataTypes) => {
+const { sequelize } = require('../connection.js');
+const { DataTypes } = require('sequelize');
+
   const ProductionPlan = sequelize.define('ProductionPlan', {
     id: {
       type: DataTypes.INTEGER,
@@ -55,5 +56,4 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
-  return ProductionPlan;
-};
+  module.exports = ProductionPlan;
