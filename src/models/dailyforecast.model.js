@@ -4,11 +4,11 @@ const { DataTypes } = require("sequelize");
 const DailyForecast = sequelize.define(
   "DailyForecast",
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
 
     businessId: {
       type: DataTypes.UUID,

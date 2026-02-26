@@ -56,6 +56,8 @@ const InventoryRepository = {
       productType: item.productType ?? undefined,
       quantityAvailable: item.quantityAvailable,
       productionDate: item.productionDate ?? undefined,
+      price: item.price,
+      shelf: item.shelf,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     };
