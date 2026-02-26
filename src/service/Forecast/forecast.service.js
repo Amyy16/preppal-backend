@@ -8,6 +8,12 @@ const ForecastService = {
     const items = await InventoryItem.findAll({
       where: { businessId: businessId },
     });
+    if (items.length === 0) {
+      console.log(
+        "No inventory items found for business, skipping forecast generation.",
+      );
+      return;
+    }
 
     const forecasts = [];
     const tomorrow = new Date();
@@ -32,19 +38,16 @@ const ForecastService = {
           item_name: item.productName,
           business_type: businessType,
           date: dateStr,
-          price: Number(item.quantityAvailable),
+          price: Number(item.price),
           shelf_life_hours: Number(item.shelf),
           weather: "Clear",
           is_holiday: 0,
         };
 
-        console.log(payload)
+        console.log(payload);
 
         const prediction = await mlApiService.getPrediction(payload);
 
-        // if (!prediction) continue;
-        // console.log(`Prediction for item ${item.id}:`, prediction);
-        // // Handle fallback responses from ML API
         if (!prediction || prediction.fallback) {
           if (prediction && prediction.predicted_demand != null) {
             // ML returned cached forecast
@@ -150,38 +153,23 @@ const ForecastService = {
         continue;
       }
     }
-
     return forecasts;
   },
 
-  //       const saved = await DailyForecastRepository.createForecast({
-  //         itemId: item.id,
-  //         businessId,
-  //         forecastDate: dateStr,
-  //         predictedDemand: prediction.predicted_demand,
-  //         recommendedQuantity: prediction.recommended_quantity,
-  //         confidence: prediction.confidence,
-  //         confidenceScore: prediction.confidence_score,
-  //       });
-
-  //       forecasts.push(saved);
-  //     } catch (err) {
-  //       console.error(`Prediction failed for item ${item.id}`, err);
-  //       // fallback logic can go here
-  //       continue;
-  //     }
-  //   }
-
-  //   return forecasts;
-  // },
-
   async getTodayForecasts(businessId) {
+    // Get today's date in YYYY-MM-DD format
     const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
 
-    const forecasts = await DailyForecastRepository.getForecastsByDate(
-      today,
+    // Fetch forecasts within today's date range
+    const forecasts = await DailyForecastRepository.getForecastsByDateRange(
+      startOfDay,
+      endOfDay,
       businessId,
     );
+    console.log(startOfDay, endOfDay, forecasts);
+
     return forecasts.map((f) => ({
       itemId: f.itemId,
       itemName: f.InventoryItem?.productName,
@@ -193,26 +181,40 @@ const ForecastService = {
     }));
   },
 
-  async checkRisk(businessId, itemId, plannedQuantity) {
+  async checkWasteRisk(businessId, itemId, plannedQuantity) {
     console.log("Checking risk for:", { businessId, itemId, plannedQuantity });
-    // get today's forecast for this item
+    // Get today's date in YYYY-MM-DD format
     const today = new Date();
-    console.log(today);
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+
     const forecast = await DailyForecastRepository.getForecastByItemAndDate(
-      today,
+      startOfDay,
+      endOfDay,
       businessId,
       itemId,
     );
+    console.log("Today's forecast:", forecast);
+
     if (!forecast) {
-      return ({
-                success: false,
-        message: "No forecast available for this item today, cannot assess risk",
-      });
+      return {
+        success: false,
+        message:
+          "No forecast available for this item today, cannot assess risk",
+      };
     }
-    const riskData = await mlApiService.checkRisk({
+    const payload = {
       predicted_demand: forecast.predictedDemand,
       planned_quantity: plannedQuantity,
-    });
+    };
+    const riskData = await mlApiService.checkRisk(payload);
+
+    if (!riskData) {
+      return {
+        success: false,
+        message: "ML API unavailable",
+      };
+    }
 
     const saved = await ProductionPlan.create({
       businessId: businessId,

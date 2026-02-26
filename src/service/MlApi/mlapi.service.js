@@ -23,7 +23,6 @@ const mlApiService = {
         },
         timeout: TIMEOUT,
       });
-      console.log(payload);
       return res.status === 200 ? res.data : null;
     } catch (err) {
       console.error("ML API prediction failed:", err);
@@ -31,17 +30,18 @@ const mlApiService = {
     }
   },
 
-  async checkRisk(predictedDemand, plannedQuantity) {
+  async checkRisk(payload) {
     try {
       const res = await axios.post(
         `${BASE_URL}/api/risk-alert`,
+        payload,
         {
-          predicted_demand: predictedDemand,
-          planned_quantity: plannedQuantity,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: TIMEOUT,
         },
-        { timeout: TIMEOUT },
       );
-
       return res.status === 200 ? res.data : null;
     } catch (err) {
       console.error("ML API risk check failed:", err.message);

@@ -13,6 +13,9 @@ const dailySalesRoutes = require("./routes/dailySales.routes");
 const forecastRoutes = require("./routes/forecast.route");
 const productionRoutes = require("./routes/production.routes");
 
+// Start Cron Jobs
+require('./scheduler/forecastCron');
+
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/business", businessRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);

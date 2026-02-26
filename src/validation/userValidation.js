@@ -51,10 +51,19 @@ const inventorySchema = z.object({
     .int("Quantity must be a whole number")
     .min(0, "Quantity cannot be negative"),
 
-  productionDate: z
+   price: z
+    .coerce.number()
+    .min(0, "Price cannot be negative"),
+
+    shelf: z
+    .coerce.number()
+    .min(0.5, "Shelf number cannot be negative"),
+
+
+
+    productionDate: z
     .string()
     .date({ message: "Production date must be a valid ISO date" })
-    .optional()
 }).strict();
 
 const updateInventorySchema = inventorySchema

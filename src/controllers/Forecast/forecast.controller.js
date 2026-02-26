@@ -1,31 +1,19 @@
 const ForecastService = require("../../service/Forecast/forecast.service");
 
 const ForecastController = {
-  async generateDailyForecasts(req, res) {
+  //for daily forecast generation, this will be called by the cron job scheduler
+  async generateDailyForecasts(businessId) {
     try {
-      const { businessId } = req.query;
       if (!businessId) {
-        return res.status(400).json({
-          detail: {
-            success: false,
-            error: "Valid business_id is required",
-          },
-        });
+        console.warn("Skipped: businessId is missing");
+        return;
       }
       const forecasts =
         await ForecastService.generateDailyForecasts(businessId);
-      return res.status(200).json({
-        success: true,
-        message: "Daily forecasts generated successfully",
-        data: forecasts,
-      });
+      console.log(`Daily forecasts generated for business ${businessId}`);
+      return forecasts;
     } catch (err) {
-      console.error(err);
-      return res.status(500).json({
-        success: false,
-        message: err.message || "Failed to generate forecasts",
-        data: null,
-      });
+    console.error(`Failed to generate forecasts for business ${businessId}:`, err);
     }
   },
 

@@ -32,6 +32,15 @@ const BusinessRepository = {
     }
   },
 
+  async getAllBusinesses() {
+    try {
+      const businesses = await Business.findAll({ attributes: ['id'] });
+      return businesses;
+    } catch (error) {
+      throw new Error('Error fetching all businesses: ' + error.message);
+    }
+  },
+
 
   async updateBusiness(id, data) {
     try {

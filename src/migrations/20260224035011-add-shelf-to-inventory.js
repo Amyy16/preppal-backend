@@ -4,7 +4,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.addColumn('inventory', 'shelf', {
       type: Sequelize.STRING,
-      allowNull: true
+      allowNull: false
     });
   },
 
