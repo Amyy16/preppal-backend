@@ -3,7 +3,7 @@ const router = express.Router();
 
 const AuthController = require('../controllers/Auth/auth.controller');
 const validateRequest = require('../middleware/validation');
-const { registerUserSchema, loginUserSchema, resetPasswordSchema, forgotPasswordSchema } = require('../validation/authValidation');
+const { registerUserSchema, loginUserSchema} = require('../validation/authValidation');
 
 // Signup
 router.post('/signup', validateRequest(registerUserSchema), AuthController.signup);
@@ -12,15 +12,15 @@ router.post('/signup', validateRequest(registerUserSchema), AuthController.signu
 router.post('/login', validateRequest(loginUserSchema), AuthController.login);
 
 // Verify Email
-router.post('/verify-email', AuthController.verifyEmail);
+// router.post('/verify-email', AuthController.verifyEmail);
 
-// Resend Email Verification(controller will accepts email from the client)
-router.post('/resend-verification', validateRequest(forgotPasswordSchema), AuthController.resendEmailVerification);
+// // Resend Email Verification(controller will accepts email from the client)
+// router.post('/resend-verification', validateRequest(forgotPasswordSchema), AuthController.resendEmailVerification);
 
-// Forgot Password
-router.post('/forgot-password', validateRequest(forgotPasswordSchema), AuthController.forgotPassword);
+// // Forgot Password
+// router.post('/forgot-password', validateRequest(forgotPasswordSchema), AuthController.forgotPassword);
 
-// Reset Password
-router.post('/reset-password', validateRequest(resetPasswordSchema), AuthController.resetPassword);
+// // Reset Password
+// router.post('/reset-password', validateRequest(resetPasswordSchema), AuthController.resetPassword);
 
 module.exports = router;
