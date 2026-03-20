@@ -6,7 +6,7 @@ const BusinessRepository = require("../db/business.db");
 
 // Schedule: every day at 6 AM
 cron.schedule(
-  "5 11 * * *",
+  "0 6 * * *",
   async () => {
     try {
       console.log("Running daily forecast generation at 6 AM");
