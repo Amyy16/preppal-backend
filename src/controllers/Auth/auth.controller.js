@@ -50,77 +50,77 @@ const AuthController = {
     }
   },
 
-  async resendEmailVerification(req, res) {
-    try {
-      const { email } = req.body;
-      await AuthService.resendVerification(email);
+  // async resendEmailVerification(req, res) {
+  //   try {
+  //     const { email } = req.body;
+  //     await AuthService.resendVerification(email);
 
-      return res.status(200).json({
-        success: true,
-        message: "Verification email resent successfully",
-      });
-    } catch (error) {
-      return res.status(400).json({
-        success: false,
-        message: error.message || "Failed to resend verification email",
-      });
-    }
-  },
+  //     return res.status(200).json({
+  //       success: true,
+  //       message: "Verification email resent successfully",
+  //     });
+  //   } catch (error) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       message: error.message || "Failed to resend verification email",
+  //     });
+  //   }
+  // },
 
-  async verifyEmail(req, res) {
-    try {
-      const { token } = req.body;
+  // async verifyEmail(req, res) {
+  //   try {
+  //     const { token } = req.body;
 
-      await AuthService.verifyEmail( token);
+  //     await AuthService.verifyEmail( token);
 
-      return res.status(200).json({
-        success: true,
-        message: "Email verified successfully",
-      });
+  //     return res.status(200).json({
+  //       success: true,
+  //       message: "Email verified successfully",
+  //     });
 
-    } catch (error) {
-      return res.status(400).json({
-        success: false,
-        message: error.message || "Email verification failed",
-      });
-    }
-  },
+  //   } catch (error) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       message: error.message || "Email verification failed",
+  //     });
+  //   }
+  // },
 
-  async forgotPassword(req, res) {
-    try {
-      const { email } = req.body;
+  // async forgotPassword(req, res) {
+  //   try {
+  //     const { email } = req.body;
 
-      await AuthService.forgotPassword(email);
+  //     await AuthService.forgotPassword(email);
 
-      return res.status(200).json({
-        success: true,
-        message: "Password reset email sent successfully",
-      });
-    } catch (error) {
-      return res.status(400).json({
-        success: false,
-        message: error.message || "Failed to send password reset email",
-      });
-    }
-  },
+  //     return res.status(200).json({
+  //       success: true,
+  //       message: "Password reset email sent successfully",
+  //     });
+  //   } catch (error) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       message: error.message || "Failed to send password reset email",
+  //     });
+  //   }
+  // },
 
-  async resetPassword(req, res) {
-    try {
-      const { token, newPassword } = req.body;
+  // async resetPassword(req, res) {
+  //   try {
+  //     const { token, newPassword } = req.body;
 
-      await AuthService.resetPassword(token, newPassword);
+  //     await AuthService.resetPassword(token, newPassword);
 
-      return res.status(200).json({
-        success: true,
-        message: "Password reset successfully",
-      });
-    } catch (error) {
-      return res.status(400).json({
-        success: false,
-        message: error.message || "Failed to reset password",
-      });
-    }
-  },
+  //     return res.status(200).json({
+  //       success: true,
+  //       message: "Password reset successfully",
+  //     });
+  //   } catch (error) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       message: error.message || "Failed to reset password",
+  //     });
+  //   }
+  // },
 
 };
 

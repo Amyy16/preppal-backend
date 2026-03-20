@@ -2,6 +2,7 @@ const DailyForecastRepository = require("../../db/dailyforecast.db");
 const InventoryItem = require("../../models/inventory.model");
 const ProductionPlan = require("../../models/productionplan.model");
 const mlApiService = require("../MlApi/mlapi.service");
+const Business = require("../../models/business.model");
 
 const ForecastService = {
   async generateDailyForecasts(businessId) {
@@ -23,11 +24,14 @@ const ForecastService = {
     for (const item of items) {
       try {
         // Validate business_type
+        const business = await Business.findByPk(businessId);
         const businessType = ["Restaurant", "Cafe", "Bakery"].includes(
-          item.productType,
+          business.businessType,
         )
-          ? item.productType
+          ? business.businessType
           : "Restaurant";
+
+        console.log(businessType);
 
         if (Number(item.quantityAvailable) <= 0) {
           console.warn(`Skipping item ${item.id} due to invalid quantity`);
